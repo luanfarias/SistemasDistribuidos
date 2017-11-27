@@ -10,10 +10,11 @@ public class QuizCliente {
 			System.err.println("Use o comando: java QuizCliente 'ip'  Quiz");
 			System.exit(1);
 		}
+
 		try {
 			String objname = "rmi://"+args[0]+"/"+args[1];
 			System.out.println("Aguardando o objeto:  " + objname);
-        		cliente = (QuizInterface) Naming.lookup(objname);// Rmiregistry
+			cliente = (QuizInterface) Naming.lookup(objname);// Rmiregistry
 		} catch (Exception e) {
 			System.err.println("Problemas de localizacao! " + e);
 			e.printStackTrace();
@@ -24,7 +25,12 @@ public class QuizCliente {
 			System.out.println(cliente.mostraPerguntaEscolhida());
 			Scanner ler = new Scanner(System.in);
 			int resposta = ler.nextInt();
-			System.out.println(cliente.verificaResposta(resposta));
+			cliente.salvaInformacao(resposta);
+			while (cliente.verificaClientes() == false) {
+				ler.nextLine();
+				System.out.println("Aguardando cliente 2 responder...");
+			}
+			System.out.println(cliente.verificaResposta());
 		} catch (RemoteException re) {
 			System.err.println("Problemas com a chamada remota! " + re);
 			re.printStackTrace();
